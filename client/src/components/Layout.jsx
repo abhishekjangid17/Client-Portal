@@ -1,14 +1,12 @@
 import Sidebar from './Sidebar';
 
-const Layout = ({ children }) => {
+export default function Layout({ children }) {
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)' }}>
       <Sidebar />
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main style={{ flex: 1, padding: '2.5rem', overflowY: 'auto', fontFamily: 'var(--font-body)' }}>
         {children}
       </main>
     </div>
   );
-};
-
-export default Layout;
+}

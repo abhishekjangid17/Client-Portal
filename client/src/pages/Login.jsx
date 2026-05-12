@@ -4,7 +4,7 @@ import API from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import toast, { Toaster } from 'react-hot-toast';
 
-const Login = () => {
+export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
@@ -25,52 +25,53 @@ const Login = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <Toaster />
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 w-full max-w-md">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-1">Welcome back</h1>
-        <p className="text-gray-500 text-sm mb-6">Login to your client portal</p>
+  const inputStyle = {
+    width: '100%', padding: '12px 16px', borderRadius: '10px',
+    border: '1px solid var(--border2)', background: 'rgba(255,255,255,0.04)',
+    color: 'var(--text)', fontFamily: 'var(--font-body)', fontSize: '14px',
+    outline: 'none', transition: 'border-color 0.2s',
+  };
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', fontFamily: 'var(--font-body)', position: 'relative', overflow: 'hidden' }}>
+      <Toaster toastOptions={{ style: { background: 'var(--surface)', color: 'var(--text)', border: '1px solid var(--border)' } }} />
+      <div style={{ position: 'absolute', top: '-20%', left: '-10%', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+      <div className="fade-up" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '20px', padding: '2.5rem', width: '100%', maxWidth: '420px', position: 'relative', zIndex: 1 }}>
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 800, background: 'linear-gradient(135deg, #a78bfa, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '8px' }}>
+            ClientPortal
+          </div>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 700, color: 'var(--text)', marginBottom: '4px' }}>Welcome back</h1>
+          <p style={{ color: 'var(--muted)', fontSize: '14px' }}>Login to your portal</p>
+        </div>
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <label className="text-sm text-gray-600 mb-1 block">Email</label>
-            <input
-              type="email"
-              placeholder="you@example.com"
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              required
-            />
+            <label style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '6px', display: 'block' }}>Email</label>
+            <input type="email" placeholder="you@example.com" style={inputStyle} value={form.email}
+              onChange={e => setForm({ ...form, email: e.target.value })}
+              onFocus={e => e.target.style.borderColor='rgba(124,58,237,0.6)'}
+              onBlur={e => e.target.style.borderColor='var(--border2)'}
+              required />
           </div>
           <div>
-            <label className="text-sm text-gray-600 mb-1 block">Password</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              required
-            />
+            <label style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '6px', display: 'block' }}>Password</label>
+            <input type="password" placeholder="••••••••" style={inputStyle} value={form.password}
+              onChange={e => setForm({ ...form, password: e.target.value })}
+              onFocus={e => e.target.style.borderColor='rgba(124,58,237,0.6)'}
+              onBlur={e => e.target.style.borderColor='var(--border2)'}
+              required />
           </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg text-sm font-medium transition"
-          >
-            {loading ? 'Logging in...' : 'Login'}
+          <button type="submit" disabled={loading} style={{ marginTop: '8px', padding: '13px', borderRadius: '10px', border: 'none', background: loading ? 'rgba(124,58,237,0.5)' : 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff', fontSize: '15px', fontWeight: 600, fontFamily: 'var(--font-display)', cursor: loading ? 'not-allowed' : 'pointer', letterSpacing: '0.02em' }}>
+            {loading ? 'Logging in...' : 'Login →'}
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-500 mt-4">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-blue-600 hover:underline">Register</Link>
+        <p style={{ textAlign: 'center', fontSize: '13px', color: 'var(--muted)', marginTop: '1.5rem' }}>
+          No account? <Link to="/register" style={{ color: '#a78bfa', textDecoration: 'none' }}>Register</Link>
         </p>
       </div>
     </div>
   );
-};
-
-export default Login;
+}

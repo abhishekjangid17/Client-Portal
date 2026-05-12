@@ -1,162 +1,87 @@
 import { useNavigate } from 'react-router-dom';
 
 const features = [
-  {
-    title: 'Kanban board',
-    desc: 'Drag tasks across To Do, In Progress and Done columns',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-      </svg>
-    ),
-  },
-  {
-    title: 'Project tracking',
-    desc: 'Create and monitor multiple projects with deadlines',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-      </svg>
-    ),
-  },
-  {
-    title: 'Role-based access',
-    desc: 'Separate admin and client views with JWT auth',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-      </svg>
-    ),
-  },
-  {
-    title: 'Live dashboard',
-    desc: 'Real-time stats on active, completed and on-hold projects',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-      </svg>
-    ),
-  },
-  {
-    title: 'Secure auth',
-    desc: 'JWT tokens, bcrypt hashing and protected routes',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      </svg>
-    ),
-  },
-  {
-    title: 'Task priorities',
-    desc: 'Set low, medium or high priority with due dates',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-      </svg>
-    ),
-  },
+  { icon: '⬡', title: 'Kanban board', desc: 'Move tasks across To Do, In Progress and Done visually' },
+  { icon: '◈', title: 'JWT auth', desc: 'Secure login with bcrypt hashing and protected routes' },
+  { icon: '◉', title: 'Role access', desc: 'Separate admin and client dashboards' },
+  { icon: '◎', title: 'Live stats', desc: 'Real-time project and task count dashboard' },
+  { icon: '⬟', title: 'Task priority', desc: 'Low, medium, high priority with due dates' },
+  { icon: '◫', title: 'REST API', desc: 'Full Express + MongoDB backend with 10+ endpoints' },
 ];
 
-const Home = () => {
+export default function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div style={{ fontFamily: 'var(--font-body)', minHeight: '100vh', background: 'var(--bg)', overflow: 'hidden' }}>
 
-      {/* Navbar */}
-      <nav className="flex justify-between items-center px-8 py-4 border-b border-gray-100">
-        <span className="text-lg font-semibold text-blue-600">ClientPortal</span>
-        <div className="flex gap-3">
-          <button
-            onClick={() => navigate('/login')}
-            className="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition"
-          >
-            Login
-          </button>
-          <button
-            onClick={() => navigate('/register')}
-            className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
+      {/* Orb backgrounds */}
+      <div style={{ position: 'fixed', top: '-20%', left: '-10%', width: '600px', height: '600px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'fixed', bottom: '-10%', right: '-10%', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+
+      {/* Nav */}
+      <nav style={{ position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 3rem', borderBottom: '1px solid var(--border)' }}>
+        <div style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 800, background: 'linear-gradient(135deg, #a78bfa, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          ClientPortal
+        </div>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={() => navigate('/login')} style={{ padding: '8px 20px', borderRadius: '10px', border: '1px solid var(--border2)', background: 'transparent', color: 'var(--muted)', fontFamily: 'var(--font-body)', fontSize: '14px', cursor: 'pointer', transition: 'all 0.2s' }}
+            onMouseEnter={e => e.target.style.color='var(--text)'}
+            onMouseLeave={e => e.target.style.color='var(--muted)'}
+          >Login</button>
+          <button onClick={() => navigate('/register')} style={{ padding: '8px 20px', borderRadius: '10px', border: 'none', background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff', fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, cursor: 'pointer' }}>
             Get started
           </button>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="text-center px-6 py-20">
-        <div className="inline-block bg-blue-50 text-blue-700 text-xs font-medium px-4 py-1.5 rounded-full mb-5">
-          Full-stack MERN project
+      <section style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '6rem 2rem 4rem' }}>
+        <div className="fade-up" style={{ display: 'inline-block', background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', color: '#a78bfa', fontSize: '12px', fontWeight: 500, padding: '5px 16px', borderRadius: '20px', marginBottom: '2rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          Full-stack MERN · React + Node + MongoDB
         </div>
-        <h1 className="text-4xl font-semibold text-gray-900 leading-tight mb-4">
-          Manage clients and projects<br className="hidden sm:block" /> in one place
+        <h1 className="fade-up-2" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: 800, lineHeight: 1.1, marginBottom: '1.5rem', background: 'linear-gradient(160deg, #f0f2ff 0%, #a78bfa 50%, #06b6d4 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          Manage clients.<br />Ship projects faster.
         </h1>
-        <p className="text-gray-500 text-base max-w-lg mx-auto mb-8 leading-relaxed">
-          A modern client portal to track projects, manage tasks with a Kanban board,
-          and collaborate with your team — all in one clean dashboard.
+        <p className="fade-up-3" style={{ color: 'var(--muted)', fontSize: '17px', maxWidth: '500px', margin: '0 auto 2.5rem', lineHeight: 1.7 }}>
+          A production-grade client portal built with the MERN stack. Kanban boards, JWT auth, role-based dashboards — all in one.
         </p>
-        <div className="flex gap-3 justify-center flex-wrap">
-          <button
-            onClick={() => navigate('/register')}
-            className="px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
-          >
-            Get started free
+        <div className="fade-up-4" style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button onClick={() => navigate('/register')} style={{ padding: '14px 32px', borderRadius: '12px', border: 'none', background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff', fontSize: '15px', fontWeight: 600, fontFamily: 'var(--font-display)', cursor: 'pointer', letterSpacing: '0.02em' }}>
+            Start for free →
           </button>
-          <button
-            onClick={() => navigate('/login')}
-            className="px-6 py-3 border border-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition"
-          >
-            Login to dashboard
+          <button onClick={() => navigate('/login')} style={{ padding: '14px 32px', borderRadius: '12px', border: '1px solid var(--border2)', background: 'rgba(255,255,255,0.03)', color: 'var(--text)', fontSize: '15px', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+            Login
           </button>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="bg-gray-50 py-14 px-6">
-        <h2 className="text-center text-xl font-semibold text-gray-800 mb-8">
-          Everything you need
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-          {features.map((f) => (
-            <div
-              key={f.title}
-              className="bg-white border border-gray-100 rounded-2xl p-5"
+      {/* Feature grid */}
+      <section style={{ position: 'relative', zIndex: 1, padding: '2rem 3rem 5rem', maxWidth: '960px', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
+          {features.map((f, i) => (
+            <div key={i} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', transition: 'border-color 0.2s, transform 0.2s', cursor: 'default' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(124,58,237,0.4)'; e.currentTarget.style.transform='translateY(-2px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.transform='translateY(0)'; }}
             >
-              <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center mb-3">
-                {f.icon}
-              </div>
-              <p className="text-sm font-medium text-gray-800 mb-1">{f.title}</p>
-              <p className="text-xs text-gray-400 leading-relaxed">{f.desc}</p>
+              <div style={{ fontSize: '22px', marginBottom: '12px', background: 'linear-gradient(135deg, #a78bfa, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{f.icon}</div>
+              <p style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: '15px', marginBottom: '6px', color: 'var(--text)' }}>{f.title}</p>
+              <p style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 1.6 }}>{f.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-12 px-6">
-        <div className="grid grid-cols-3 gap-6 max-w-lg mx-auto text-center">
-          <div>
-            <p className="text-2xl font-semibold text-blue-600">MERN</p>
-            <p className="text-xs text-gray-400 mt-1">Full stack</p>
-          </div>
-          <div>
-            <p className="text-2xl font-semibold text-blue-600">JWT</p>
-            <p className="text-xs text-gray-400 mt-1">Secure auth</p>
-          </div>
-          <div>
-            <p className="text-2xl font-semibold text-blue-600">Live</p>
-            <p className="text-xs text-gray-400 mt-1">Deployed on Vercel</p>
-          </div>
-        </div>
+      {/* Stack badges */}
+      <section style={{ borderTop: '1px solid var(--border)', padding: '2rem 3rem', display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
+        {['MongoDB', 'Express.js', 'React', 'Node.js', 'JWT', 'Tailwind', 'Vercel', 'Render'].map(t => (
+          <span key={t} style={{ background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--muted)', fontSize: '12px', padding: '5px 14px', borderRadius: '20px', fontWeight: 500 }}>{t}</span>
+        ))}
       </section>
 
-      {/* Footer */}
-      <footer className="mt-auto border-t border-gray-100 py-5 text-center text-xs text-gray-400">
-        Built with React, Node.js, Express &amp; MongoDB
+      <footer style={{ textAlign: 'center', padding: '1.5rem', color: 'var(--muted)', fontSize: '12px', borderTop: '1px solid var(--border)', position: 'relative', zIndex: 1 }}>
+        Built with MERN stack · Deployed on Vercel + Render
       </footer>
-
     </div>
   );
-};
-
-export default Home;
+}
