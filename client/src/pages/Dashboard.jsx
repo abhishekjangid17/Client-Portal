@@ -4,14 +4,6 @@ import API from '../api/axios';
 import Layout from '../components/Layout';
 import { useAuth } from '../context/AuthContext';
 
-const statCard = (label, value, color) => (
-  <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', position: 'relative', overflow: 'hidden' }}>
-    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: color }} />
-    <p style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>{label}</p>
-    <p style={{ fontFamily: 'var(--font-display)', fontSize: '36px', fontWeight: 800, color: 'var(--text)' }}>{value}</p>
-  </div>
-);
-
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -24,56 +16,62 @@ export default function Dashboard() {
 
   const active = projects.filter(p => p.status === 'active').length;
   const completed = projects.filter(p => p.status === 'completed').length;
+  const onHold = projects.filter(p => p.status === 'on-hold').length;
+
+  const statusStyle = {
+    active:    { background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0' },
+    completed: { background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe' },
+    'on-hold': { background: '#fffbeb', color: '#d97706', border: '1px solid #fde68a' },
+  };
 
   return (
     <Layout>
-      <div className="fade-up" style={{ marginBottom: '2.5rem' }}>
-        <p style={{ fontSize: '13px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>Overview</p>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '28px', fontWeight: 800, color: 'var(--text)' }}>
-          Welcome back, {user?.name?.split(' ')[0]} 👋
-        </h1>
+      <div style={{ marginBottom: '28px' }}>
+        <p style={{ fontSize: '12px', color: '#a8a49e', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: '4px' }}>Overview</p>
+        <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.3px', color: '#111' }}>Good to see you, {user?.name?.split(' ')[0]}</h1>
       </div>
 
       {/* Stats */}
-      <div className="fade-up-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '14px', marginBottom: '2.5rem' }}>
-        {statCard('Total', projects.length, 'linear-gradient(90deg, #7c3aed, #06b6d4)')}
-        {statCard('Active', active, 'linear-gradient(90deg, #10b981, #06b6d4)')}
-        {statCard('Done', completed, 'linear-gradient(90deg, #a78bfa, #7c3aed)')}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '32px' }}>
+        {[['Total projects', projects.length, '#111'],['Active', active, '#16a34a'],['Completed', completed, '#2563eb'],['On hold', onHold, '#d97706']].map(([l,v,c]) => (
+          <div key={l} style={{ background: '#fff', border: '1px solid #e8e7e4', borderRadius: '7px', padding: '16px 18px' }}>
+            <p style={{ fontSize: '12px', color: '#a8a49e', marginBottom: '6px' }}>{l}</p>
+            <p style={{ fontSize: '28px', fontWeight: 700, color: c, lineHeight: 1, letterSpacing: '-.5px' }}>{v}</p>
+          </div>
+        ))}
       </div>
 
-      {/* Recent */}
-      <div className="fade-up-3">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 700, color: 'var(--text)' }}>Recent projects</h2>
-          <button onClick={() => navigate('/projects')} style={{ fontSize: '13px', color: '#a78bfa', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>View all →</button>
+      {/* Recent projects */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+        <h2 style={{ fontSize: '14px', fontWeight: 600, color: '#111' }}>Recent projects</h2>
+        <button onClick={() => navigate('/projects')} style={{ fontSize: '12px', color: '#6f6e69', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>View all</button>
+      </div>
+
+      {loading ? (
+        <p style={{ color: '#a8a49e', fontSize: '13px' }}>Loading...</p>
+      ) : projects.length === 0 ? (
+        <div style={{ border: '1px dashed #e8e7e4', borderRadius: '7px', padding: '40px', textAlign: 'center' }}>
+          <p style={{ color: '#a8a49e', fontSize: '13px', marginBottom: '12px' }}>No projects yet</p>
+          <button onClick={() => navigate('/projects')} style={{ padding: '8px 18px', borderRadius: '5px', border: '1px solid #111', background: '#111', color: '#fff', fontSize: '13px', cursor: 'pointer' }}>Create first project</button>
         </div>
-
-        {loading ? (
-          <p style={{ color: 'var(--muted)', fontSize: '14px' }}>Loading...</p>
-        ) : projects.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '3rem', border: '1px dashed var(--border)', borderRadius: '16px' }}>
-            <p style={{ color: 'var(--muted)', fontSize: '14px', marginBottom: '12px' }}>No projects yet</p>
-            <button onClick={() => navigate('/projects')} style={{ padding: '8px 20px', borderRadius: '8px', border: 'none', background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff', fontSize: '13px', cursor: 'pointer' }}>Create one →</button>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {projects.slice(0, 5).map(p => (
-              <div key={p._id} onClick={() => navigate(`/projects/${p._id}`)} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', transition: 'border-color 0.15s' }}
-                onMouseEnter={e => e.currentTarget.style.borderColor='var(--border2)'}
-                onMouseLeave={e => e.currentTarget.style.borderColor='var(--border)'}
-              >
-                <div>
-                  <p style={{ fontWeight: 500, fontSize: '14px', color: 'var(--text)', marginBottom: '2px' }}>{p.title}</p>
-                  <p style={{ fontSize: '12px', color: 'var(--muted)' }}>{p.description?.slice(0, 60) || 'No description'}</p>
-                </div>
-                <span style={{ fontSize: '11px', padding: '4px 12px', borderRadius: '20px', fontWeight: 500, flexShrink: 0, marginLeft: '12px', background: p.status === 'active' ? 'rgba(16,185,129,0.15)' : p.status === 'completed' ? 'rgba(124,58,237,0.15)' : 'rgba(245,158,11,0.15)', color: p.status === 'active' ? '#34d399' : p.status === 'completed' ? '#a78bfa' : '#fbbf24' }}>
-                  {p.status}
-                </span>
+      ) : (
+        <div style={{ background: '#fff', border: '1px solid #e8e7e4', borderRadius: '7px', overflow: 'hidden' }}>
+          {projects.slice(0, 6).map((p, i) => (
+            <div key={p._id} onClick={() => navigate(`/projects/${p._id}`)} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 18px', borderBottom: i < Math.min(projects.length, 6) - 1 ? '1px solid #e8e7e4' : 'none', cursor: 'pointer', transition: 'background .15s' }}
+              onMouseEnter={e => e.currentTarget.style.background='#fafaf9'}
+              onMouseLeave={e => e.currentTarget.style.background='#fff'}
+            >
+              <div>
+                <p style={{ fontSize: '14px', fontWeight: 500, color: '#111', marginBottom: '2px' }}>{p.title}</p>
+                <p style={{ fontSize: '12px', color: '#a8a49e' }}>{p.description?.slice(0, 60) || 'No description'}</p>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+              <span style={{ fontSize: '11px', padding: '3px 10px', borderRadius: '4px', fontWeight: 500, flexShrink: 0, ...statusStyle[p.status] }}>
+                {p.status}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </Layout>
   );
 }
