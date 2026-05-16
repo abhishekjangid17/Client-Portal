@@ -11,10 +11,26 @@ const features = [
 
 export default function Home() {
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const [demoLoading, setDemoLoading] = useState(false);
+
+const handleDemo = async () => {
+    setDemoLoading(true);
+    try {
+      const { data } = await API.post('/auth/demo');
+      login(data.user, data.token);
+      toast.success('Welcome to the demo! 🎮');
+      navigate('/dashboard');
+    } catch (err) {
+      toast.error('Demo login failed. Try again.');
+    } finally {
+      setDemoLoading(false);
+    }
+  };
 
   return (
     <div style={{ fontFamily: 'var(--font-body)', minHeight: '100vh', background: 'var(--bg)', overflow: 'hidden' }}>
-
+     <Toaster toastOptions={{ style: { background: 'var(--surface)', color: 'var(--text)', border: '1px solid var(--border)' } }} />
       {/* Orb backgrounds */}
       <div style={{ position: 'fixed', top: '-20%', left: '-10%', width: '600px', height: '600px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
       <div style={{ position: 'fixed', bottom: '-10%', right: '-10%', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
@@ -47,13 +63,28 @@ export default function Home() {
           A production-grade client portal built with the MERN stack. Kanban boards, JWT auth, role-based dashboards — all in one.
         </p>
         <div className="fade-up-4" style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button onClick={() => navigate('/register')} style={{ padding: '14px 32px', borderRadius: '12px', border: 'none', background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff', fontSize: '15px', fontWeight: 600, fontFamily: 'var(--font-display)', cursor: 'pointer', letterSpacing: '0.02em' }}>
-            Start for free →
-          </button>
-          <button onClick={() => navigate('/login')} style={{ padding: '14px 32px', borderRadius: '12px', border: '1px solid var(--border2)', background: 'rgba(255,255,255,0.03)', color: 'var(--text)', fontSize: '15px', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
-            Login
-          </button>
-        </div>
+  <button
+    onClick={() => navigate('/register')}
+    style={{ padding: '14px 32px', borderRadius: '12px', border: 'none', background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff', fontSize: '15px', fontWeight: 600, fontFamily: 'var(--font-display)', cursor: 'pointer', letterSpacing: '0.02em' }}
+  >
+    Start for free →
+  </button>
+
+  <button
+    onClick={handleDemo}
+    disabled={demoLoading}
+    style={{ padding: '14px 32px', borderRadius: '12px', border: '1px solid rgba(124,58,237,0.4)', background: 'rgba(124,58,237,0.1)', color: '#a78bfa', fontSize: '15px', cursor: demoLoading ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)', fontWeight: 500, transition: 'all 0.2s' }}
+  >
+    {demoLoading ? 'Loading demo...' : '🎮 Try live demo'}
+  </button>
+
+  <button
+    onClick={() => navigate('/login')}
+    style={{ padding: '14px 32px', borderRadius: '12px', border: '1px solid var(--border2)', background: 'rgba(255,255,255,0.03)', color: 'var(--text)', fontSize: '15px', cursor: 'pointer', fontFamily: 'var(--font-body)' }}
+  >
+    Login
+  </button>
+</div>
       </section>
 
       {/* Feature grid */}
