@@ -4,24 +4,16 @@ import API from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import toast, { Toaster } from 'react-hot-toast';
 
-const INIT_TASKS = {
-  todo: [
-    { id: 'a', title: 'Mobile responsiveness', pri: 'medium' },
-    { id: 'b', title: 'Performance audit', pri: 'low' },
-  ],
-  inprog: [
-    { id: 'c', title: 'Build product page', pri: 'high' },
-    { id: 'd', title: 'Auth screens', pri: 'high' },
-  ],
-  done: [
-    { id: 'e', title: 'UX audit complete', pri: 'high' },
-  ],
+const priStyle = {
+  high:   { background: '#2a1515', color: '#f87171', border: '1px solid #3f1f1f' },
+  medium: { background: '#2a2010', color: '#fbbf24', border: '1px solid #3f3010' },
+  low:    { background: '#0f2a18', color: '#4ade80', border: '1px solid #1a3f25' },
 };
 
-const priStyle = {
-  high:   { background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca' },
-  medium: { background: '#fffbeb', color: '#d97706', border: '1px solid #fde68a' },
-  low:    { background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0' },
+const INIT_TASKS = {
+  todo:   [{ id:'a', title:'Mobile responsiveness', pri:'medium' }, { id:'b', title:'Performance audit', pri:'low' }],
+  inprog: [{ id:'c', title:'Build product page', pri:'high' }, { id:'d', title:'Auth screens', pri:'high' }],
+  done:   [{ id:'e', title:'UX audit complete', pri:'high' }],
 };
 
 function AnimatedBoard() {
@@ -30,9 +22,9 @@ function AnimatedBoard() {
   const [doneCount, setDoneCount] = useState(1);
   const seq = useRef(0);
   const MOVES = [
-    { from: 'todo', id: 'a', to: 'inprog' },
-    { from: 'inprog', id: 'c', to: 'done' },
-    { from: 'todo', id: 'b', to: 'inprog' },
+    { from:'todo',   id:'a', to:'inprog' },
+    { from:'inprog', id:'c', to:'done'   },
+    { from:'todo',   id:'b', to:'inprog' },
   ];
 
   useEffect(() => {
@@ -41,7 +33,7 @@ function AnimatedBoard() {
       setMovingId(move.id);
       setTimeout(() => {
         setTasks(prev => {
-          const next = { todo: [...prev.todo], inprog: [...prev.inprog], done: [...prev.done] };
+          const next = { todo:[...prev.todo], inprog:[...prev.inprog], done:[...prev.done] };
           const i = next[move.from].findIndex(t => t.id === move.id);
           if (i === -1) return prev;
           const [task] = next[move.from].splice(i, 1);
@@ -53,17 +45,21 @@ function AnimatedBoard() {
         seq.current++;
       }, 400);
     };
-    const t = setTimeout(() => { run(); const i = setInterval(run, 2800); return () => clearInterval(i); }, 1400);
+    const t = setTimeout(() => {
+      run();
+      const iv = setInterval(run, 2800);
+      return () => clearInterval(iv);
+    }, 1400);
     return () => clearTimeout(t);
   }, []);
 
   const col = (label, items) => (
-    <div style={{ flex: 1, background: '#fafaf9', border: '1px solid #e8e7e4', borderRadius: '6px', padding: '8px' }}>
-      <div style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em', color: '#a8a49e', marginBottom: '8px' }}>{label}</div>
+    <div style={{ flex:1, background:'#1c1c1c', border:'1px solid #2a2a2a', borderRadius:'6px', padding:'8px' }}>
+      <div style={{ fontSize:'9px', fontWeight:700, textTransform:'uppercase', letterSpacing:'.08em', color:'#555', marginBottom:'8px' }}>{label}</div>
       {items.map(t => (
-        <div key={t.id} style={{ background: '#fff', border: `1px solid ${movingId === t.id ? '#111' : '#e8e7e4'}`, borderRadius: '4px', padding: '5px 7px', marginBottom: '5px', opacity: movingId === t.id ? 0.25 : 1, transition: 'all .35s ease' }}>
-          <div style={{ fontSize: '9px', color: '#111', marginBottom: '3px', lineHeight: 1.4 }}>{t.title}</div>
-          <span style={{ fontSize: '8px', padding: '1px 5px', borderRadius: '3px', fontWeight: 600, ...priStyle[t.pri] }}>{t.pri}</span>
+        <div key={t.id} style={{ background:'#111', border:`1px solid ${movingId===t.id?'#ededed':'#2a2a2a'}`, borderRadius:'4px', padding:'6px 7px', marginBottom:'5px', opacity:movingId===t.id?0.2:1, transition:'all .35s ease' }}>
+          <div style={{ fontSize:'9px', color:'#ccc', marginBottom:'4px', lineHeight:1.4 }}>{t.title}</div>
+          <span style={{ fontSize:'8px', padding:'1px 5px', borderRadius:'3px', fontWeight:600, ...priStyle[t.pri] }}>{t.pri}</span>
         </div>
       ))}
     </div>
@@ -71,37 +67,31 @@ function AnimatedBoard() {
 
   return (
     <div>
-      {/* Fake browser chrome */}
-      <div style={{ background: '#f3f2f0', border: '1px solid #e8e7e4', borderRadius: '8px 8px 0 0', padding: '9px 12px', display: 'flex', alignItems: 'center', gap: '6px', borderBottom: 'none' }}>
+      <div style={{ background:'#1c1c1c', border:'1px solid #2a2a2a', borderRadius:'8px 8px 0 0', padding:'9px 12px', display:'flex', alignItems:'center', gap:'6px', borderBottom:'none' }}>
         {['#ff5f57','#febc2e','#28c840'].map(c => (
-          <div key={c} style={{ width: '10px', height: '10px', borderRadius: '50%', background: c }} />
+          <div key={c} style={{ width:'10px', height:'10px', borderRadius:'50%', background:c }} />
         ))}
-        <div style={{ flex: 1, background: '#fff', border: '1px solid #e8e7e4', borderRadius: '4px', height: '20px', marginLeft: '10px', display: 'flex', alignItems: 'center', padding: '0 8px' }}>
-          <span style={{ fontSize: '10px', color: '#a8a49e' }}>client-portal.vercel.app/dashboard</span>
+        <div style={{ flex:1, background:'#111', border:'1px solid #2a2a2a', borderRadius:'4px', height:'20px', marginLeft:'10px', display:'flex', alignItems:'center', padding:'0 8px' }}>
+          <span style={{ fontSize:'10px', color:'#555' }}>client-portal.vercel.app/dashboard</span>
         </div>
       </div>
-      {/* App UI */}
-      <div style={{ border: '1px solid #e8e7e4', borderRadius: '0 0 8px 8px', display: 'flex', overflow: 'hidden', height: '220px' }}>
-        {/* Sidebar */}
-        <div style={{ width: '110px', borderRight: '1px solid #e8e7e4', padding: '12px 10px', background: '#fff', flexShrink: 0 }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '-.2px', marginBottom: '14px' }}>ClientPortal</div>
-          {['Dashboard','Projects','Tasks'].map((l, i) => (
-            <div key={l} style={{ fontSize: '10px', padding: '6px 8px', borderRadius: '4px', marginBottom: '2px', background: i===1 ? '#f3f2f0' : 'transparent', color: i===1 ? '#111' : '#6f6e69', fontWeight: i===1 ? 500 : 400 }}>{l}</div>
+      <div style={{ border:'1px solid #2a2a2a', borderRadius:'0 0 8px 8px', display:'flex', overflow:'hidden', height:'220px' }}>
+        <div style={{ width:'110px', borderRight:'1px solid #2a2a2a', padding:'12px 10px', background:'#111', flexShrink:0 }}>
+          <div style={{ fontSize:'12px', fontWeight:700, letterSpacing:'-.2px', marginBottom:'14px', color:'#ededed' }}>ClientPortal</div>
+          {['Dashboard','Projects','Tasks'].map((l,i) => (
+            <div key={l} style={{ fontSize:'10px', padding:'6px 8px', borderRadius:'4px', marginBottom:'2px', background:i===1?'#1c1c1c':'transparent', color:i===1?'#ededed':'#555', fontWeight:i===1?500:400 }}>{l}</div>
           ))}
         </div>
-        {/* Main */}
-        <div style={{ flex: 1, padding: '12px', background: '#fafaf9', overflow: 'hidden' }}>
-          {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '6px', marginBottom: '10px' }}>
-            {[['Total','4'],['Active','2'],['Done', String(doneCount)]].map(([l,v]) => (
-              <div key={l} style={{ background: '#fff', border: '1px solid #e8e7e4', borderRadius: '5px', padding: '6px 8px' }}>
-                <div style={{ fontSize: '8px', color: '#a8a49e', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: '2px' }}>{l}</div>
-                <div style={{ fontSize: '17px', fontWeight: 700, color: '#111', lineHeight: 1 }}>{v}</div>
+        <div style={{ flex:1, padding:'12px', background:'#0e0e0e', overflow:'hidden' }}>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'6px', marginBottom:'10px' }}>
+            {[['Total','4'],['Active','2'],['Done',String(doneCount)]].map(([l,v]) => (
+              <div key={l} style={{ background:'#161616', border:'1px solid #2a2a2a', borderRadius:'5px', padding:'6px 8px' }}>
+                <div style={{ fontSize:'8px', color:'#555', textTransform:'uppercase', letterSpacing:'.06em', marginBottom:'2px' }}>{l}</div>
+                <div style={{ fontSize:'17px', fontWeight:700, color:'#ededed', lineHeight:1 }}>{v}</div>
               </div>
             ))}
           </div>
-          {/* Kanban */}
-          <div style={{ display: 'flex', gap: '6px' }}>
+          <div style={{ display:'flex', gap:'6px' }}>
             {col('To do', tasks.todo)}
             {col('In progress', tasks.inprog)}
             {col('Done', tasks.done)}
@@ -113,12 +103,12 @@ function AnimatedBoard() {
 }
 
 const features = [
-  ['Kanban board', 'Visual task management across To Do, In Progress and Done'],
-  ['JWT auth', 'Secure register, login and protected routes with bcrypt'],
-  ['Role access', 'Separate admin and client views with permissions'],
-  ['REST API', '10+ Express endpoints with MongoDB and Mongoose'],
-  ['Task priority', 'Low, medium, high priority levels with due dates'],
-  ['Live deploy', 'Vercel frontend, Render backend, Atlas database'],
+  ['Kanban board',  'Visual task management across columns'],
+  ['JWT auth',      'Secure login with bcrypt hashing'],
+  ['Role access',   'Admin and client views with permissions'],
+  ['REST API',      '10+ Express endpoints with MongoDB'],
+  ['Task priority', 'Low, medium, high with due dates'],
+  ['Live deploy',   'Vercel frontend · Render backend'],
 ];
 
 export default function Home() {
@@ -141,78 +131,73 @@ export default function Home() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fff', fontFamily: 'system-ui,-apple-system,sans-serif' }}>
-      <Toaster toastOptions={{ style: { fontSize: '13px', borderRadius: '6px' } }} />
+    <div style={{ minHeight:'100vh', background:'#0e0e0e', fontFamily:'system-ui,-apple-system,sans-serif', color:'#ededed' }}>
+      <Toaster toastOptions={{ style:{ fontSize:'13px', borderRadius:'6px', background:'#1c1c1c', color:'#ededed', border:'1px solid #2a2a2a' } }} />
 
       {/* Nav */}
-      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 40px', borderBottom: '1px solid #e8e7e4' }}>
-        <span style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '-.3px' }}>ClientPortal</span>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button onClick={() => navigate('/login')} style={{ padding: '7px 16px', borderRadius: '6px', border: '1px solid #e8e7e4', background: 'transparent', fontSize: '13px', cursor: 'pointer', color: '#6f6e69' }}>Login</button>
-          <button onClick={() => navigate('/register')} style={{ padding: '7px 16px', borderRadius: '6px', border: 'none', background: '#111', color: '#fff', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>Get started</button>
+      <nav style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'14px 40px', borderBottom:'1px solid #2a2a2a' }}>
+        <span style={{ fontSize:'15px', fontWeight:700, letterSpacing:'-.3px' }}>ClientPortal</span>
+        <div style={{ display:'flex', gap:'8px' }}>
+          <button onClick={() => navigate('/login')} style={{ padding:'7px 16px', borderRadius:'6px', border:'1px solid #2a2a2a', background:'transparent', fontSize:'13px', cursor:'pointer', color:'#888' }}>Login</button>
+          <button onClick={() => navigate('/register')} style={{ padding:'7px 16px', borderRadius:'6px', border:'none', background:'#ededed', color:'#0e0e0e', fontSize:'13px', fontWeight:600, cursor:'pointer' }}>Get started</button>
         </div>
       </nav>
 
       {/* Hero */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'start', padding: '64px 40px 48px', maxWidth: '1100px', margin: '0 auto' }}>
-
-        {/* Left */}
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'60px', alignItems:'start', padding:'64px 40px 48px', maxWidth:'1100px', margin:'0 auto' }}>
         <div className="fade-up">
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#6f6e69', border: '1px solid #e8e7e4', padding: '4px 10px', borderRadius: '4px', marginBottom: '24px' }}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
-            Live demo available — no sign up needed
+          <div style={{ display:'inline-flex', alignItems:'center', gap:'6px', fontSize:'12px', color:'#888', border:'1px solid #2a2a2a', padding:'4px 10px', borderRadius:'4px', marginBottom:'24px' }}>
+            <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#4ade80', display:'inline-block' }} />
+            Live demo — no sign up needed
           </div>
 
-          <h1 style={{ fontSize: '42px', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.8px', color: '#111', marginBottom: '18px' }}>
+          <h1 style={{ fontSize:'42px', fontWeight:800, lineHeight:1.08, letterSpacing:'-.8px', color:'#ededed', marginBottom:'18px' }}>
             Project management<br />for freelancers
           </h1>
 
-          <p style={{ fontSize: '16px', color: '#6f6e69', lineHeight: 1.7, marginBottom: '32px', maxWidth: '420px' }}>
+          <p style={{ fontSize:'16px', color:'#888', lineHeight:1.7, marginBottom:'32px', maxWidth:'400px' }}>
             Track client projects, manage tasks on a Kanban board, and collaborate with clients — built end-to-end with the MERN stack.
           </p>
 
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '40px', flexWrap: 'wrap' }}>
-            <button onClick={handleDemo} disabled={demoLoading} style={{ padding: '11px 22px', borderRadius: '6px', border: '1px solid #111', background: '#111', color: '#fff', fontSize: '14px', fontWeight: 600, cursor: demoLoading ? 'not-allowed' : 'pointer', opacity: demoLoading ? 0.7 : 1 }}>
+          <div style={{ display:'flex', gap:'10px', marginBottom:'40px', flexWrap:'wrap' }}>
+            <button onClick={handleDemo} disabled={demoLoading} style={{ padding:'11px 22px', borderRadius:'6px', border:'none', background:'#ededed', color:'#0e0e0e', fontSize:'14px', fontWeight:700, cursor:demoLoading?'not-allowed':'pointer', opacity:demoLoading?0.6:1 }}>
               {demoLoading ? 'Loading...' : '▶ Try live demo'}
             </button>
-            <button onClick={() => navigate('/register')} style={{ padding: '11px 22px', borderRadius: '6px', border: '1px solid #e8e7e4', background: '#fff', color: '#111', fontSize: '14px', cursor: 'pointer' }}>
+            <button onClick={() => navigate('/register')} style={{ padding:'11px 22px', borderRadius:'6px', border:'1px solid #2a2a2a', background:'transparent', color:'#ededed', fontSize:'14px', cursor:'pointer' }}>
               Create account
             </button>
-            <a href="https://github.com" target="_blank" rel="noreferrer" style={{ padding: '11px 22px', borderRadius: '6px', border: '1px solid #e8e7e4', background: '#fff', color: '#6f6e69', fontSize: '14px', cursor: 'pointer', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <a href="https://github.com" target="_blank" rel="noreferrer" style={{ padding:'11px 22px', borderRadius:'6px', border:'1px solid #2a2a2a', background:'transparent', color:'#888', fontSize:'14px', cursor:'pointer', textDecoration:'none' }}>
               GitHub ↗
             </a>
           </div>
 
-          {/* Stack pills */}
-          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          <div style={{ display:'flex', gap:'6px', flexWrap:'wrap' }}>
             {['MongoDB','Express.js','React','Node.js','JWT','Tailwind CSS','Vercel'].map(t => (
-              <span key={t} style={{ fontSize: '11px', padding: '3px 9px', borderRadius: '4px', border: '1px solid #e8e7e4', color: '#6f6e69', background: '#fafaf9' }}>{t}</span>
+              <span key={t} style={{ fontSize:'11px', padding:'3px 9px', borderRadius:'4px', border:'1px solid #2a2a2a', color:'#555', background:'#161616' }}>{t}</span>
             ))}
           </div>
         </div>
 
-        {/* Right — animated mockup */}
         <div className="fade-up-2">
           <AnimatedBoard />
         </div>
       </div>
 
-      {/* Features — grid with dividers, no cards */}
-      <div style={{ borderTop: '1px solid #e8e7e4', borderBottom: '1px solid #e8e7e4' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', maxWidth: '1100px', margin: '0 auto' }}>
+      {/* Features */}
+      <div style={{ borderTop:'1px solid #2a2a2a', borderBottom:'1px solid #2a2a2a' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', maxWidth:'1100px', margin:'0 auto' }}>
           {features.map(([title, desc], i) => (
-            <div key={title} style={{ padding: '28px 32px', borderRight: i % 3 !== 2 ? '1px solid #e8e7e4' : 'none', borderBottom: i < 3 ? '1px solid #e8e7e4' : 'none' }}>
-              <p style={{ fontSize: '14px', fontWeight: 600, color: '#111', marginBottom: '5px' }}>{title}</p>
-              <p style={{ fontSize: '13px', color: '#6f6e69', lineHeight: 1.55 }}>{desc}</p>
+            <div key={title} style={{ padding:'28px 32px', borderRight: i%3!==2 ? '1px solid #2a2a2a' : 'none', borderBottom: i<3 ? '1px solid #2a2a2a' : 'none' }}>
+              <p style={{ fontSize:'13px', fontWeight:600, color:'#ededed', marginBottom:'5px' }}>{title}</p>
+              <p style={{ fontSize:'12px', color:'#555', lineHeight:1.6 }}>{desc}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Footer */}
-      <footer style={{ padding: '20px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #e8e7e4' }}>
-        <span style={{ fontSize: '12px', color: '#a8a49e' }}>Built with React · Node.js · MongoDB Atlas</span>
-        <span style={{ fontSize: '12px', color: '#a8a49e' }}>Deployed on Vercel + Render</span>
+      <footer style={{ padding:'20px 40px', display:'flex', justifyContent:'space-between', borderTop:'1px solid #2a2a2a' }}>
+        <span style={{ fontSize:'12px', color:'#555' }}>Built with React · Node.js · MongoDB Atlas</span>
+        <span style={{ fontSize:'12px', color:'#555' }}>Deployed on Vercel + Render</span>
       </footer>
     </div>
   );
