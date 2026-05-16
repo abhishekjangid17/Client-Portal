@@ -1,4 +1,8 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from '../api/axios';
+import { useAuth } from '../context/AuthContext';
+import toast, { Toaster } from 'react-hot-toast';
 
 const features = [
   { icon: '⬡', title: 'Kanban board', desc: 'Move tasks across To Do, In Progress and Done visually' },
